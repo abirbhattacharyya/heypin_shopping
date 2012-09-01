@@ -1,0 +1,25 @@
+<%= link_to("Scroll<br>to&nbsp;Top".html_safe, "javascript:void(0)", :class => "scroller") %>
+<%=content_tag(:div, :id => "header") do %>
+    <%=content_tag(:ul, :class => "menu") do %>      
+      <%= content_tag(:li, link_to("Home", root_path, :class => "home "+([root_path].include?(request.path) ? "current" : ""))) %>
+      <% if logged_in? %>
+        <% if biz_logged_in? %>
+          <%= content_tag(:li, link_to("Product", product_catalog_path, :class => ([product_catalog_path].include?(request.path) ?  "current" : nil))) %>
+        <%end%>
+        <% if fb_logged_in?%>
+          <%= content_tag(:li, link_to("Cart", cart_products_path, :class => ([cart_products_path].include?(request.path) ?  "current" : nil))) %>
+        <%end%>
+        <%= content_tag(:li, link_to("Logout", logout_path, :class => ([logout_path].include?(request.path) ?  "current" : nil)))%>
+      <%else%>
+        <%= content_tag(:li, link_to("Login", login_path, :class => ([login_path].include?(request.path) ?  "current" : nil)))%>
+      <%end%>      
+      
+    <% end %>
+
+    <%= link_to("LOGO", root_path,:class => "logo") %>
+
+    <%# form_tag(search_path, :class => "search") do %>
+      <%#= text_field_tag :search, @search %>
+      <%#= submit_tag "&nbsp;" %>
+    <% #end %>
+<% end %>

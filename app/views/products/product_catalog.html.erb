@@ -1,0 +1,71 @@
+
+<div class="static-aligner">
+  <h1>Tell us the details on this individual one product</h1>
+<%=form_for :product, :url => product_catalog_path, :html => {:multipart => true, :id => "submit_form"} do |f| %>
+  <%=hidden_field_tag :add_image_cnt%>
+  <%= hidden_field_tag :submit_button, "add" %>
+  <p class="control">
+      <%= label_tag(:name, "Product Name?") %>
+      <div>
+        <%= f.text_field :name, :class => "w250px" %>
+      </div>
+  </p>
+  <p class="control">
+      <%= label_tag(:description, "Description") %>
+      <div>
+        <%= f.text_field :description, :class => "w250px" %>
+      </div>
+  </p>
+  
+  <%1.upto(MAX_IMAGES).each do |i|%>
+  <div id="image_form_<%=i%>">
+    <div id="file_field_div<%=i%>">
+      <p class="control"> <%= label_tag(:image_1, "Upload picture") %></p>
+      <div>
+        <%= file_field_tag "image",{:id => "image_#{i}",:name => "image_#{i}"} %>
+        <%=link_to "or Image Url","javascript:void(0)",:onclick => "jQuery('#file_field_div#{i}').hide();jQuery('#url_field_div#{i}').show();"%>
+      </div>
+    </div>
+    
+      <span id ="url_field_div<%=i%>">
+        <p class="control"><%= label_tag(:image_1, "Image URL") %></p>
+        <div>
+          <%= text_field_tag "image_remote_url",nil, :class => "w250px",:size => 30,:id => "image_remote_url_#{i}",:name => "image_remote_url_#{i}" %>
+          <%=link_to "or Upload Image","javascript:void(0)",:onclick => "jQuery('#file_field_div#{i}').show();jQuery('#url_field_div#{i}').hide();"%>
+        </div>
+      </span>  
+
+   </div>   
+  <%end%>
+  <%=link_to "Add Image","javascript:;",:onclick => "add_images(#{MAX_IMAGES});",:id => "max_images_link"%>
+  <p class="control">
+      <%= label_tag(:price, "Price ($)?") %>
+      <div>
+        <%= f.text_field :price, :maxLength => 7, :class => "w250px", :onKeyPress => "return keyAllowed(event,'0123456789')", :onKeyUp => "isNumber(this);" %>
+      </div>
+  </p>
+  
+  <%= f.submit("Add") %> 
+  <%= link_to("Finish", "javascript:void();", :class => "alter-link", :onclick => "jQuery('#submit_button').val('finish'); jQuery('#submit_form').submit();return false;") %>
+<% end %>
+</div>
+
+<script type="text/javascript">
+  <%1.upto(MAX_IMAGES).each do |i|%>
+    jQuery("#url_field_div<%=i%>").hide();
+    <% if i > 1 %>
+      jQuery("#image_form_<%=i%>").hide();
+    <%end%>
+  <%end%>
+
+  jQuery("#add_image_cnt").val(2);
+
+  function add_images(max_images){
+    var cur_image_cnt = parseInt(jQuery("#add_image_cnt").val());    
+    jQuery("#image_form_"+cur_image_cnt).show();
+    cur_image_cnt += 1;
+    jQuery("#add_image_cnt").val(cur_image_cnt);    
+    if (cur_image_cnt > max_images)
+      jQuery("#max_images_link").hide();
+  }
+</script>

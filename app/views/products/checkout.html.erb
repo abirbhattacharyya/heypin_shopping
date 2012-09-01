@@ -1,0 +1,126 @@
+  <div class="static-aligner">
+  <h1>Plz. review your purchase details & enter all required info, thanks!</h1>
+
+  <%= form_for :payment, :url => payments_path, :html => {:id => "payment_form"} do |f| %>
+    
+    <% cart_products = get_cart_products%>
+    <%total_price = cart_products.empty? ? 0 : cart_products.map(&:price).sum%>
+  <div class="product">
+         
+    <% unless cart_products.empty?%>
+      <table cellpadding = 1 cellspacing = 0 border =1 width = "90%" id="hor-minimalist-b">
+        <colgroup width="70%"/>
+        <colgroup width="30%"/>
+          <tr>
+            <th> Product </th>
+            <th> Price </th>
+          </td>
+          <%cart_products.each do |product|%>
+            <tr>
+              <td><%=product.name%></td>
+              <td><%=to_currency(product.price)%></td>
+            </tr> 
+          <%end%>
+          <tr>
+            <td> <b>Total</b></td>
+              <td> <b><%=to_currency(cart_products.map(&:price).sum)%></b></tr>
+          </tr>
+      </table>
+    <%end%>
+
+
+
+    <p class="control">
+        <label>First Name </label>
+        <div>
+          <%= f.text_field :first_name,:class => "w250px"%>
+        </div>
+    </p>
+    <p class="control">
+        <label>Last Name </label>
+        <div>
+          <%= f.text_field :last_name,:class => "w250px"%>
+        </div>
+    </p>
+    <p class="control">
+        <label>E-mail Address </label>
+        <div>
+          <%= f.text_field :email, :class => "w250px" %>
+        </div>
+    </p>
+    <p class="control">
+        <label>Card Type </label>
+        
+          <%= f.select :card_type, (Payment::CARD_TYPES.sort!), :class => "w250px" %>
+        
+    </p>
+    <p class="control">
+        <label>Credit Card Number </label>
+        <div>
+          <%= f.text_field :card_number, :maxLength => 16, :class => "w250px", :onKeyPress => "return keyAllowed(event,'0123456789')" %>
+        </div>
+    </p>
+    <p class="control" style="text-align: left;">
+        <label>Expiration Date </label>
+        
+          <%= f.select :cc_expiry_m1, (Payment.month_options((Date.today.month))).collect{|i| [i[0].titleize, i[1]]}, {:selected => @month}, :id => "cc_expiry_m1",:class => "expire_select" %>
+          <%= f.select :cc_expiry_m2, (Payment.month_options(1)).collect{|i| [i[0].titleize, i[1]]}, {:selected => @month}, :id => "cc_expiry_m2",:class => "expire_select" %>
+          <%= f.select :cc_expiry_year, ((Date.today.year)...(Date.today.year+7)).collect{|i| [i,i]}, {}, :onchange => "if(this.value==#{Date.today.year}){jQuery('#cc_expiry_m1').show();jQuery('#cc_expiry_m2').hide();}else{jQuery('#cc_expiry_m2').show();jQuery('#cc_expiry_m1').hide();}",:class => "expire_select" %>
+       
+    </p>
+    
+    <p class="control">
+        <label>3 or 4 digit security code </label>
+        <div>
+          <%= f.text_field :cvv, :maxLength => 4, :class => "w250px", :onKeyPress => "return keyAllowed(event,'0123456789')" %>
+        </div>
+    </p>
+
+    <p class="control">
+        <label>Postal Code (US, Canada) </label>
+        <div>
+          <%= f.text_field :postal_code, :class => "w250px", :onKeyPress => "return keyAllowed(event,'#{("0".."9").to_a * ""} ')" %>
+        </div>
+    </p>
+    <p class="control">
+        <label>Country </label>
+        
+          <%= f.select :country, options_for_select([["USA","US"]]), {}, :class => "w250px" %>
+        
+    </p>
+    
+    <p class="control">
+        <%= f.submit("Go") %>
+    </p>
+  <% end %>
+  </div>
+</div>
+<%=javascript_tag do %>
+    <% if @payment %>
+      <% if @payment.cc_expiry_year == Date.today.year %>
+          jQuery('#cc_expiry_m2').hide();
+      <% else %>
+          jQuery('#cc_expiry_m1').hide();
+      <% end %>
+    <% else %>    
+        jQuery('#cc_expiry_m2').hide();
+    <% end %>
+    
+    jQuery(document).ready(function(){
+
+     if (jQuery("#payment_card_type").val() == "american_express"){
+      jQuery("#payment_card_number").attr("maxlength",15);
+     }
+     else
+      jQuery("#payment_card_number").attr("maxlength",16);     
+
+     jQuery("#payment_card_type").change(function(){
+        jQuery("#payment_card_number").attr("value","");
+        if (this.value == "american_express")
+          jQuery("#payment_card_number").attr("maxlength",15);
+        else
+          jQuery("#payment_card_number").attr("maxlength",16);
+     });
+   });
+
+<% end %>

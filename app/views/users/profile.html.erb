@@ -1,0 +1,60 @@
+<div class="static-aligner">
+<%= content_tag(:h1, (current_user.profile ? "Here is what you told us, Edit your profile" : "Tell us your business profile")) %>
+
+<%#= error_messages_for(:profile, :order => [:name, :web_url, :address1, :address2, :city, :state, :zip, :phone, :email, :twitter_id], :message => "", :header_message => "")%>
+<%=form_for :profile, :url => profile_path, :html => {:id => "submit_form", :multipart => true} do |f| %>
+  <p class="control">
+      <%= label_tag(:name, "Name") %>
+    <div>
+      <%= f.text_field :name, :class => "w250px" %>
+    </div>
+  </p>
+  <p class="control">
+      <%= label_tag(:address1, "Address1") %>
+      <div>
+        <%= f.text_field :address1, :class => "w250px" %>
+      </div>
+  </p>
+  <p class="control">
+      <%= label_tag(:address2, "Address2") %>
+      <div>
+        <%= f.text_field :address2, :class => "w250px" %>
+      </div>
+  </p>
+  <p class="control">
+      <%= label_tag(:city, "City") %>
+      <div>
+        <%= f.text_field :city, :class => "w250px" %>
+      </div>
+  </p>
+  <p class="control">
+      <%= label_tag(:state, "State") %>
+      <div>
+        <%= f.text_field :state, :class => "w250px" %>
+      </div>
+  </p>
+  <p class="control">
+      <%= label_tag(:zip, "Zip") %>
+      <div>
+        <%= f.text_field :zip, :class => "w250px" %>
+      </div>
+  </p>  
+  <p class="control">
+      <%= label_tag(:phone, "Phone") %>
+      <div>
+        <%= f.text_field :phone, :class => "w250px" %>
+      </div>
+  </p>
+  <p class="control">
+      <%= label_tag(:website, "Website") %>
+      <div>
+        <%= f.text_field :website, :class => "w250px" %>
+      </div>
+  </p>
+  <p class="control">
+    <%= f.submit("Go!", :style => "display:;") %>
+    <%#= link_to("Go!", {}, :class => "button-short green", :onclick => "var f = document.forms['submit_form'];f.submit();return false;") %>
+    <%= link_to("Cancel", "javascript:history.back();", :class => "alter-link") if current_user.profile%>
+  </p>
+<% end %>
+</div>

@@ -1,0 +1,5 @@
+jQuery('#product_<%=@product.id%>').fadeOut('slow', function() {
+    this.hide();
+});
+jQuery("#product_<%=@product.id%>_likes").html(<%=@product.product_likes.size%>)
+showNotification("Cool! Thanks for the love!", "notice");

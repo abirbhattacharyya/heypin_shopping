@@ -1,0 +1,48 @@
+<%
+  offer = @payment.offer
+  product = offer.product
+  first_profile = product.user.profile
+  
+%>
+
+<% address = " %s, %s, %s %s"%[first_profile.address1, first_profile.city, first_profile.state, first_profile.zip] %>
+<p>
+Hi,<br/>
+This confirms your reservation at:
+</p>
+<p>
+The Perry South Beach Hotel<br/>
+2377 Collins Avenue Miami Beach, FL 33139<br/>
+(305) 604-1000  <br/>
+p.reservations@perrysouthbeachhotel.com<br/>
+</p>
+<p>
+Transaction Code: <%=@payment.transaction_id%><br/>
+<b>Check In:</b> <%=@payment.arrival_date.strftime("%A, %B %d")%><br/>
+<b>Check Out:</b> <%=@payment.departure_date.strftime("%A, %B %d")%><br/>
+# Of Nights: <%= number_with_delimiter(@payment.no_of_nights) %>
+</p>
+<p>
+<b>Room Type:</b> <%= product.name %> + FREE 375 ml bottle of Patrón Silver tequila
+</p>
+<p>
+Your Total Cost: <%= number_to_currency((@payment.price), :precision => 2) %>
+</p>
+<p>
+Guest Name: <%=@payment.name%><br/>
+<%=@payment.email%><br/>
+Last 4 of credit card=<%=@payment.cc_number_last_digit(4)%><br/>
+</p>
+
+<p>
+We will charge your credit card <%= number_to_currency((@payment.deposited_amount), :precision => 2) %>  for a deposit<br/>
+Please cancel within 72 hours to avoid the cancelation fee of <%= number_to_currency((@payment.deposited_amount), :precision => 2) %> <br/>
+*10.4% Tax is not included in this price
+</p>
+
+<p>
+Have a great stay.<br/>
+The Perry South Beach Hotel
+</p>
+
+

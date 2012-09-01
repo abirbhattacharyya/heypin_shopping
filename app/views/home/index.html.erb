@@ -1,0 +1,50 @@
+<!-- columns container -->
+<div class="columns clearfix"></div>
+
+<ul class="stack" style="display: none;">
+  <% unless @products.empty? %>
+    <% @products.each do |product| %>
+        <li class="item">
+            <p class="ctrls">
+                <% if fb_current_user %>                    
+                  <span id ="product_<%=product.id%>">
+                    <% unless @like_products.include?(product.id) %>                                        
+                      <%=link_to "Like & Love",set_like_product_path(product.id),:remote => true,:class => "like"%>
+                    <%end%>
+                  </span>
+                <%else%>
+                  <%=link_to "Like & Love","javascript:;",:onclick => "showNotification('Please login.','error');",:class => "like"%>
+                <%end%>
+                
+                <%= link_to "Comment", comment_product_path(product.id), :class => "comment"%>            
+            </p>
+            
+            <%= link_to((image_tag product.single_image_url ,:id => "img_src_#{product.id}"),product_path(product),:class => "thumb") %>
+            <h3><%=product.name%></h3>
+            <p class="descr">
+                <%=truncate(product.description,:length =>100)%>
+            </p>
+            
+            <ul class="comments">
+              <% likes = product.product_likes.size %>
+              <li style="font-weight:bold;">
+                love & like (<%= content_tag(:span, likes, :id => "product_#{product.id}_likes") %>)
+              </li>
+              <% comments = product.comments %>
+              <% unless comments.empty? %>
+                <% comments.each do |comment| %>
+                <% user= comment.user %>
+                <li>
+                    <%= link_to(image_tag(user.image_url), "#") %>
+                    <p>
+                      <%=link_to(user.name, "#") %>
+                      <%= comment.comment %>
+                    </p>
+                </li>
+                <% end %>
+             <% end %>
+            </ul><!-- .comments -->
+        </li>
+    <% end %>
+  <% end %>
+</ul>

@@ -1,0 +1,35 @@
+<div class="static-aligner">
+	<% if session[:cart] and !session[:cart].empty?%>
+		<% cart_products = get_cart_products%>
+		<% unless cart_products.empty?%>
+			<table cellpadding = 1 cellspacing = 0 border =1 width = "90%" id="hor-minimalist-b">
+				<colgroup width="60%"/>
+				<colgroup width="30%"/>
+				<colgroup width="10%"/>
+					<tr>
+						<th> Product </th>
+						<th> Price </th>
+						<th> &nbsp;</th>
+					</td>
+					<%cart_products.each do |product|%>
+						<tr>
+							<td><%=product.name%></td>
+							<td><%=to_currency(product.price)%></td>
+							<td><%=link_to(image_tag("cross.png"),remove_cart_product_path(product),:method => :delete,:data => { :confirm => 'Are you sure' })%></td>
+						</tr>	
+					<%end%>
+					<tr>
+						<td> <b>Total</b></td>
+						<td> <b><%=to_currency(cart_products.map(&:price).sum)%></b>
+						<td> &nbsp;</td>
+					</tr>
+					</tr>
+			</table>
+		<%end%>
+		<%=form_tag checkout_path do%>  
+			<%=submit_tag "Checkout"%>
+		<%end%>
+	<%else%>
+		Shopping cart is empty.
+	<%end%>
+</div>

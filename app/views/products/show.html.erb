@@ -1,0 +1,53 @@
+<script type="text/javascript">
+    jQuery(function() {
+        jQuery('.preview a').lightBox();
+    });
+</script>
+<div class="static-aligner">
+
+    <!-- static page content (begin) -->
+
+    <div class="capsule item">
+        <div class="preview">
+          <%
+            @product.product_images.each_with_index do |image,index|
+            style = index > 0 ? "display:none;" : ""
+          %>
+            <%= link_to(image_tag(image.image.url(:medium,false), :class => "thumb"), image.image.url(:medium,false),  :title => @product.name, :style => style) %>        
+          <%end%>
+        </div>
+        <p>
+          Name: <%=@product.description%></p>
+        <p>  Description: <%=@product.description%></p>
+        <p> Price: <%=to_currency(@product.price)%>
+        </p>
+        <p>
+         <%#=session[:cart].inspect%>
+        <%unless biz_logged_in?%> 
+            <% if !session[:cart] || !session[:cart].include?(@product.id)%>    
+                <%=form_tag purchase_products_path do%>    
+                    <%=hidden_field_tag :purchase_type%>
+                    <%=hidden_field_tag :product_id,@product.id%>
+
+                    <%=submit_tag "Add To Cart",:class => "purchase",:id => "#{Payment::PURCHASE_TYPE[:add_to_cart]}" %>      
+                    <%=submit_tag "Buy",:class => "purchase",:id => "#{Payment::PURCHASE_TYPE[:buy]}" %>
+                <%end%>
+                <br/><br/>
+            <%else%>
+                <p>Product already added to <%=link_to "cart!",cart_products_path%></p>    
+            <%end%>
+        <%end%>
+        <%= link_to "close", "/" %>
+    </p>
+
+    </div><!-- .capsule.зшт -->
+    <!-- static page content (end) -->
+
+</div><!-- .static-aligner -->
+<script>
+jQuery(document).ready(function(){
+    jQuery(".purchase").click(function(){
+        jQuery("#purchase_type").val(this.id)
+    })
+})
+</script>
